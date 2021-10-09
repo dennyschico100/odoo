@@ -3,7 +3,7 @@ services:
   odoo:
     image: odoo:14.0
     depends_on:
-      - db
+      - postgres_odoo
     restart: always
     ports:
       - "8069:8069"
@@ -15,9 +15,11 @@ services:
       - ./default:/mnt/addons
     environment:
       - PASSWORD_FILE=/run/secrets/postgresql_password
+      - HOST=postgres_odoo
+      - USER=odoo  
     secrets:
       - postgresql_password
-  db:
+  postgres_odoo:
     image: postgres:13
     ports:
       - "5432:5432"
@@ -31,6 +33,7 @@ services:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
     secrets:
       - postgresql_password
+                
 volumes:
   odoo-web-data:
   odoo-db-data:
